@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 interface ProductCardProps {
   product: Product;
-  priority?: boolean; // 👈 eklendi
+  priority?: boolean;
 }
 
 const ProductCard = ({ product, priority = false }: ProductCardProps) => {
@@ -40,8 +40,8 @@ const ProductCard = ({ product, priority = false }: ProductCardProps) => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 w-full max-w-[280px] mx-auto">
-      {/* Product Image */}
-      <div className="relative h-48 bg-gray-50">
+      {/* Görsel kısmı */}
+      <div className="relative aspect-[4/3] w-full bg-gray-50">
         {imageError ? (
           <PlaceholderImage
             productName={product.name}
@@ -55,14 +55,14 @@ const ProductCard = ({ product, priority = false }: ProductCardProps) => {
             fill
             className="object-cover"
             onError={() => setImageError(true)}
-            loading={priority ? 'eager' : 'lazy'} // 👈 önemli
-            priority={priority} // 👈 önemli
+            loading={priority ? 'eager' : 'lazy'}
+            priority={priority}
             sizes="(max-width: 768px) 100vw, 280px"
           />
         )}
       </div>
 
-      {/* Product Details */}
+      {/* Ürün bilgileri */}
       <div className="p-6">
         <h3 className="text-base font-medium text-gray-900 mb-6 text-center line-clamp-2">
           {product.name}
