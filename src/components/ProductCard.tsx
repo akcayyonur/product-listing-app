@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { Product } from '@/types/product';
 import { formatPrice, convertPopularityToScore } from '@/lib/utils';
-import { Star } from 'lucide-react';
 import PlaceholderImage from './PlaceholderImage';
+import StarRating from './StarRating';
 
 interface ProductCardProps {
   product: Product;
@@ -90,26 +90,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </p>
         </div>
 
-        {/* Popularity Score */}
-        <div className="flex items-center justify-center">
-          <div className="flex items-center space-x-1">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`w-4 h-4 ${
-                  i < Math.floor(popularityScore)
-                    ? 'text-yellow-400 fill-current'
-                    : i < popularityScore
-                    ? 'text-yellow-400 fill-current opacity-50'
-                    : 'text-gray-300'
-                }`}
-              />
-            ))}
-          </div>
-          <span className="ml-3 text-sm text-gray-600">
-            {popularityScore.toFixed(1)}/5
-          </span>
-        </div>
+        {/* Star Rating */}
+        <StarRating score={popularityScore} />
       </div>
     </div>
   );
