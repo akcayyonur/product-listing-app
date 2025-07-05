@@ -1,4 +1,3 @@
-// src/components/ProductCard.tsx
 'use client';
 
 import { useState } from 'react';
@@ -14,8 +13,8 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const [selectedColor, setSelectedColor] = useState<keyof typeof product.images>('yellow');
   const [imageError, setImageError] = useState(false);
-  
-  const currentImageUrl = product.images[selectedColor];
+
+  const currentImageUrl = product.images?.[selectedColor];
   const popularityScore = convertPopularityToScore(product.popularityScore);
 
   const colorStyles = {
@@ -35,44 +34,40 @@ const ProductCard = ({ product }: ProductCardProps) => {
     setImageError(false);
   };
 
-  const availableColors = Object.keys(product.images) as Array<keyof typeof product.images>;
+  const availableColors = Object.keys(product.images || {}) as Array<keyof typeof product.images>;
 
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 w-full max-w-[280px] mx-auto">
       {/* Product Image */}
-      <div className="relative h-48 bg-gray-50">
-        {imageError ? (
-          <PlaceholderImage 
+      <div className="relative w-full h-48 bg-gray-50">
+        {!currentImageUrl || imageError ? (
+          <PlaceholderImage
             productName={product.name}
             color={selectedColor}
-            className="w-full h-full"
+            className="absolute inset-0"
           />
         ) : (
           <img
             src={currentImageUrl}
             alt={`${product.name} in ${colorLabels[selectedColor]}`}
-            className="w-full h-full object-cover"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             onError={() => setImageError(true)}
             loading="lazy"
-            referrerPolicy="no-referrer"
-            crossOrigin="anonymous"
           />
         )}
       </div>
 
-      {/* Product Details - Reordered layout */}
+      {/* Product Details */}
       <div className="p-6">
-        {/* Product Name */}
         <h3 className="text-base font-medium text-gray-900 mb-6 text-center line-clamp-2">
           {product.name}
         </h3>
 
-        {/* Price */}
         <div className="text-lg font-semibold text-gray-900 mb-8 text-center">
           {formatPrice(product.price || 0)}
         </div>
 
-        {/* Color Picker - Circles first */}
+        {/* Color Picker */}
         <div className="mb-6">
           <div className="flex justify-center space-x-6 py-4 mb-4">
             {availableColors.map((color) => (
@@ -90,13 +85,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
               />
             ))}
           </div>
-          {/* Color text */}
           <p className="text-center text-sm text-gray-600 mb-8">
             {colorLabels[selectedColor]}
           </p>
         </div>
 
-        {/* Popularity Score - Now at bottom */}
+        {/* Popularity Score */}
         <div className="flex items-center justify-center">
           <div className="flex items-center space-x-1">
             {[...Array(5)].map((_, i) => (
