@@ -40,8 +40,8 @@ const ProductCard = ({ product, priority = false }: ProductCardProps) => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 w-full max-w-[280px] mx-auto">
-      {/* Görsel kısmı */}
-      <div className="relative aspect-[4/3] w-full bg-gray-50">
+      {/* Product Image */}
+      <div className="relative aspect-[4/5] bg-gray-50">
         {imageError ? (
           <PlaceholderImage
             productName={product.name}
@@ -62,7 +62,7 @@ const ProductCard = ({ product, priority = false }: ProductCardProps) => {
         )}
       </div>
 
-      {/* Ürün bilgileri */}
+      {/* Product Details */}
       <div className="p-6">
         <h3 className="text-base font-medium text-gray-900 mb-6 text-center line-clamp-2">
           {product.name}
