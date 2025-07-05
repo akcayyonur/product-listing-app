@@ -41,7 +41,7 @@ const ProductCard = ({ product, priority = false }: ProductCardProps) => {
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 w-full max-w-[280px] mx-auto">
       {/* Product Image */}
-      <div className="relative aspect-[4/5] bg-gray-50">
+      <div className="relative w-full aspect-[4/5] bg-gray-50">
         {imageError ? (
           <PlaceholderImage
             productName={product.name}
