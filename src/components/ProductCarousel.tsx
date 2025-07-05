@@ -1,4 +1,3 @@
-// src/components/ProductCarousel.tsx
 'use client';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -7,7 +6,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Product } from '@/types/product';
 import ProductCard from './ProductCard';
 
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -22,8 +20,8 @@ const ProductCarousel = ({ products }: ProductCarouselProps) => {
     <div className="relative px-8">
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y]}
-        spaceBetween={32} // Increased spacing between slides
-        slidesPerView={1} // Start with 1 on mobile
+        spaceBetween={32}
+        slidesPerView={1}
         navigation={{
           nextEl: '.swiper-button-next-custom',
           prevEl: '.swiper-button-prev-custom',
@@ -32,60 +30,59 @@ const ProductCarousel = ({ products }: ProductCarouselProps) => {
           clickable: true,
           dynamicBullets: true,
         }}
-        scrollbar={{ 
+        scrollbar={{
           draggable: true,
           hide: false,
         }}
         breakpoints={{
           480: {
-            slidesPerView: 1.5, // Show 1.5 cards with preview
+            slidesPerView: 1.5,
             spaceBetween: 20,
           },
           640: {
-            slidesPerView: 2.2, // Show 2+ cards with preview
+            slidesPerView: 2.2,
             spaceBetween: 24,
           },
           768: {
-            slidesPerView: 3.2, // Show 3+ cards with preview
+            slidesPerView: 3.2,
             spaceBetween: 28,
           },
           1024: {
-            slidesPerView: 4, // Show exactly 4 cards on desktop (like your design)
+            slidesPerView: 4,
             spaceBetween: 32,
           },
           1280: {
-            slidesPerView: 4.2, // Show 4+ cards with slight preview
+            slidesPerView: 4.2,
             spaceBetween: 36,
           },
           1536: {
-            slidesPerView: 5, // Show 5 cards on very large screens
+            slidesPerView: 5,
             spaceBetween: 40,
           },
         }}
-        className="!pb-20 !pt-4" // More bottom padding for pagination
-        style={{ 
+        className="!pb-20 !pt-4"
+        style={{
           height: 'auto',
-          overflow: 'visible' // Allow cards to show outside bounds
+          overflow: 'visible',
         }}
         centeredSlides={false}
-        loop={products.length > 3} // Enable loop only if more than 3 products
-        watchOverflow={true} // Disable navigation if not needed
+        loop={products.length > 3}
+        watchOverflow={true}
       >
         {products.map((product, index) => (
           <SwiperSlide key={`${product.name}-${index}`} className="!h-auto">
-            <ProductCard product={product} />
+            <ProductCard product={product} priority={index < 4} />
           </SwiperSlide>
         ))}
       </Swiper>
 
-      {/* Custom Navigation Buttons - Better positioned */}
       <button
         className="swiper-button-prev-custom absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all duration-200 hover:shadow-xl border border-gray-100"
         aria-label="Previous products"
       >
         <ChevronLeft className="w-5 h-5 text-gray-700" />
       </button>
-      
+
       <button
         className="swiper-button-next-custom absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all duration-200 hover:shadow-xl border border-gray-100"
         aria-label="Next products"

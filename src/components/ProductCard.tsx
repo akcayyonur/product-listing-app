@@ -5,16 +5,18 @@ import { Product } from '@/types/product';
 import { formatPrice, convertPopularityToScore } from '@/lib/utils';
 import { Star } from 'lucide-react';
 import PlaceholderImage from './PlaceholderImage';
+import Image from 'next/image';
 
 interface ProductCardProps {
   product: Product;
+  priority?: boolean; // 👈 eklendi
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, priority = false }: ProductCardProps) => {
   const [selectedColor, setSelectedColor] = useState<keyof typeof product.images>('yellow');
   const [imageError, setImageError] = useState(false);
 
-  const currentImageUrl = product.images?.[selectedColor];
+  const currentImageUrl = product.images[selectedColor];
   const popularityScore = convertPopularityToScore(product.popularityScore);
 
   const colorStyles = {
@@ -34,25 +36,28 @@ const ProductCard = ({ product }: ProductCardProps) => {
     setImageError(false);
   };
 
-  const availableColors = Object.keys(product.images || {}) as Array<keyof typeof product.images>;
+  const availableColors = Object.keys(product.images) as Array<keyof typeof product.images>;
 
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 w-full max-w-[280px] mx-auto">
       {/* Product Image */}
-      <div className="relative w-full h-48 bg-gray-50">
-        {!currentImageUrl || imageError ? (
+      <div className="relative h-48 bg-gray-50">
+        {imageError ? (
           <PlaceholderImage
             productName={product.name}
             color={selectedColor}
-            className="absolute inset-0"
+            className="w-full h-full"
           />
         ) : (
-          <img
+          <Image
             src={currentImageUrl}
             alt={`${product.name} in ${colorLabels[selectedColor]}`}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            fill
+            className="object-cover"
             onError={() => setImageError(true)}
-            loading="lazy"
+            loading={priority ? 'eager' : 'lazy'} // 👈 önemli
+            priority={priority} // 👈 önemli
+            sizes="(max-width: 768px) 100vw, 280px"
           />
         )}
       </div>
@@ -67,7 +72,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {formatPrice(product.price || 0)}
         </div>
 
-        {/* Color Picker */}
         <div className="mb-6">
           <div className="flex justify-center space-x-6 py-4 mb-4">
             {availableColors.map((color) => (
@@ -90,7 +94,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </p>
         </div>
 
-        {/* Popularity Score */}
         <div className="flex items-center justify-center">
           <div className="flex items-center space-x-1">
             {[...Array(5)].map((_, i) => (
@@ -106,9 +109,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               />
             ))}
           </div>
-          <span className="ml-3 text-sm text-gray-600">
-            {popularityScore.toFixed(1)}/5
-          </span>
+          <span className="ml-3 text-sm text-gray-600">{popularityScore.toFixed(1)}/5</span>
         </div>
       </div>
     </div>
