@@ -5,18 +5,16 @@ import { Product } from '@/types/product';
 import { formatPrice, convertPopularityToScore } from '@/lib/utils';
 import { Star } from 'lucide-react';
 import PlaceholderImage from './PlaceholderImage';
-import Image from 'next/image';
 
 interface ProductCardProps {
   product: Product;
-  priority?: boolean;
 }
 
-const ProductCard = ({ product, priority = false }: ProductCardProps) => {
+const ProductCard = ({ product }: ProductCardProps) => {
   const [selectedColor, setSelectedColor] = useState<keyof typeof product.images>('yellow');
   const [imageError, setImageError] = useState(false);
 
-  const currentImageUrl = product.images[selectedColor];
+  const currentImageUrl = product.images?.[selectedColor];
   const popularityScore = convertPopularityToScore(product.popularityScore);
 
   const colorStyles = {
@@ -36,28 +34,25 @@ const ProductCard = ({ product, priority = false }: ProductCardProps) => {
     setImageError(false);
   };
 
-  const availableColors = Object.keys(product.images) as Array<keyof typeof product.images>;
+  const availableColors = Object.keys(product.images || {}) as Array<keyof typeof product.images>;
 
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 w-full max-w-[280px] mx-auto">
       {/* Product Image */}
-      <div className="relative w-full aspect-[4/5] bg-gray-50">
-        {imageError ? (
+      <div className="relative w-full h-48 bg-gray-50">
+        {!currentImageUrl || imageError ? (
           <PlaceholderImage
             productName={product.name}
             color={selectedColor}
-            className="w-full h-full"
+            className="absolute inset-0"
           />
         ) : (
-          <Image
+          <img
             src={currentImageUrl}
             alt={`${product.name} in ${colorLabels[selectedColor]}`}
-            fill
-            className="object-cover"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             onError={() => setImageError(true)}
-            loading={priority ? 'eager' : 'lazy'}
-            priority={priority}
-            sizes="(max-width: 768px) 100vw, 280px"
+            loading="lazy"
           />
         )}
       </div>
@@ -72,6 +67,7 @@ const ProductCard = ({ product, priority = false }: ProductCardProps) => {
           {formatPrice(product.price || 0)}
         </div>
 
+        {/* Color Picker */}
         <div className="mb-6">
           <div className="flex justify-center space-x-6 py-4 mb-4">
             {availableColors.map((color) => (
@@ -94,6 +90,7 @@ const ProductCard = ({ product, priority = false }: ProductCardProps) => {
           </p>
         </div>
 
+        {/* Popularity Score */}
         <div className="flex items-center justify-center">
           <div className="flex items-center space-x-1">
             {[...Array(5)].map((_, i) => (
@@ -109,7 +106,9 @@ const ProductCard = ({ product, priority = false }: ProductCardProps) => {
               />
             ))}
           </div>
-          <span className="ml-3 text-sm text-gray-600">{popularityScore.toFixed(1)}/5</span>
+          <span className="ml-3 text-sm text-gray-600">
+            {popularityScore.toFixed(1)}/5
+          </span>
         </div>
       </div>
     </div>

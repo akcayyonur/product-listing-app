@@ -34,7 +34,7 @@ const ProductCarousel = ({ products }: ProductCarouselProps) => {
       >
         {products.map((product, index) => (
           <SwiperSlide key={`${product.name}-${index}`} className="!h-auto">
-            <ProductCard product={product} priority={index < 4} />
+            <ProductCard product={product} />
           </SwiperSlide>
         ))}
       </Swiper>
